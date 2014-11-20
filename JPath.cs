@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace JPath.Net
+namespace org.lmatt
 {
-	public class MyClass
+	public class JPath
 	{
-		public MyClass ()
+		public JPath ()
 		{
 		}
 	}
