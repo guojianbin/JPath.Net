@@ -35,6 +35,9 @@
     <Compile Include="JPath.cs" />
     <Compile Include="JBase.cs" />
     <Compile Include="Token.cs" />
+    <Compile Include="JException.cs" />
+    <Compile Include="JObject.cs" />
+    <Compile Include="JArray.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

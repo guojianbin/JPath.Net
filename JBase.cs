@@ -22,6 +22,76 @@ namespace org.lmatt
 		public static JBase ParseJson(string Json)
 		{
 			var chars = Json.ToCharArray ();
+			int index = 0;
+			ParseJson (chars, index);
+		}
+
+		private static JBase ParseJson(char[] chars, ref int index)
+		{
+			var token = GetNextToken (chars, ref index);
+			while (token.Type != TokenType.END || token.Type != TokenType.UNEXPECTED) 
+			{
+				switch (token.Type) {
+				case TokenType.BOOLEAN:
+					break;
+				case TokenType.STRING:
+					break;
+				case TokenType.IGNORE:
+					break;
+				case TokenType.NUMBER:
+					break;
+				case TokenType.PUNCTUATION:
+					switch (token.CharValue) {
+					case '{':
+						var obj = ParseObject (chars, ref index);
+						break;
+					case '[':
+						var array = ParseArray (chars, ref index);
+						break;
+					default:
+						throw new JException ();
+					}
+					break;
+				default:
+					throw new JException ();
+				}
+
+				token = GetNextToken (chars, ref index);
+			}
+		}
+
+		private static JObject ParseObject(char[] chars, ref int index)
+		{
+			var obj = new JObject ();
+
+			var token = GetNextToken (chars, ref index);
+			while (token.Type == TokenType.IGNORE) {
+				token = GetNextToken (chars, ref index);
+			}
+
+			if (token.Type != TokenType.STRING) {
+				throw new JException ();
+			}
+
+			var key = token.StringValue;
+
+			token = GetNextToken (chars, ref index);
+			while (token.Type == TokenType.IGNORE) {
+				token = GetNextToken (chars, ref index);
+			}
+
+			if (token.Type != TokenType.PUNCTUATION && token.CharValue != ':') 
+			{
+				throw new JException ();
+			}
+
+			obj [key] = ParseJson (chars, ref index);
+
+			//TODO: parse more key-value pairs
+		}
+
+		private static JArray ParseArray(char[] chars, ref int index)
+		{
 
 		}
 
@@ -170,6 +240,32 @@ namespace org.lmatt
 					}
 					index++;
 				}//end while
+
+				// find a bool
+				if (chars [index] == 't') 
+				{
+					if (
+						(index + 3 < chars.Length) &&
+						chars [index + 1] == 'r' &&
+						chars [index + 2] == 'u' &&
+						chars [index + 3] == 'e') 
+					{
+						return new Token { Type = TokenType.BOOLEAN, BoolValue = true };
+					}
+				}
+
+				if (chars [index] == 'f') 
+				{
+					if (
+						(index + 4 < chars.Length) &&
+						chars [index + 1] == 'a' &&
+						chars [index + 2] == 'l' &&
+						chars [index + 3] == 's' &&
+						chars [index + 4] == 'e') 
+					{
+						return new Token { Type = TokenType.BOOLEAN, BoolValue = false };
+					}
+				}
 
 				if (index >= chars.Length) 
 				{
