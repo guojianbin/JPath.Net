@@ -28,35 +28,41 @@ namespace org.lmatt
 
 		private static JBase ParseJson(char[] chars, ref int index)
 		{
-			var token = GetNextToken (chars, ref index);
-			while (token.Type != TokenType.END || token.Type != TokenType.UNEXPECTED) 
-			{
-				switch (token.Type) {
-				case TokenType.BOOLEAN:
-					break;
-				case TokenType.STRING:
-					break;
-				case TokenType.IGNORE:
-					break;
-				case TokenType.NUMBER:
-					break;
-				case TokenType.PUNCTUATION:
-					switch (token.CharValue) {
-					case '{':
-						var obj = ParseObject (chars, ref index);
-						break;
-					case '[':
-						var array = ParseArray (chars, ref index);
-						break;
-					default:
-						throw new JException ();
-					}
-					break;
+			var token = GetNextValidToken (chars, ref index);
+
+			switch (token.Type) {
+			case TokenType.PUNCTUATION:
+				switch (token.CharValue) {
+				case '{':
+					var obj = ParseObject (chars, ref index);
+					return obj;
+				case '[':
+					var array = ParseArray (chars, ref index);
+					return array;
 				default:
 					throw new JException ();
 				}
+				break;
+			default:
+				throw new JException ();
+			}
+		}
 
-				token = GetNextToken (chars, ref index);
+		private static JBase ParseJsonValue(char[] chars, ref int index)
+		{
+			var token = GetNextValidToken (chars, ref index);
+
+			switch (token.Type) {
+			case TokenType.NUMBER:
+				break;
+			case TokenType.BOOLEAN:
+				break;
+			case TokenType.STRING:
+				break;
+			case TokenType.NULL:
+				break;
+			default:
+				return ParseJson (chars, index);
 			}
 		}
 
@@ -64,9 +70,11 @@ namespace org.lmatt
 		{
 			var obj = new JObject ();
 
-			var token = GetNextToken (chars, ref index);
-			while (token.Type == TokenType.IGNORE) {
-				token = GetNextToken (chars, ref index);
+		fieldTag:
+			var token = GetNextValidToken (chars, ref index);
+
+			if (token.Type == TokenType.PUNCTUATION && token.CharValue == '}') {
+				return obj;
 			}
 
 			if (token.Type != TokenType.STRING) {
@@ -75,24 +83,40 @@ namespace org.lmatt
 
 			var key = token.StringValue;
 
-			token = GetNextToken (chars, ref index);
-			while (token.Type == TokenType.IGNORE) {
-				token = GetNextToken (chars, ref index);
-			}
+			token = GetNextValidToken (chars, ref index);
 
 			if (token.Type != TokenType.PUNCTUATION && token.CharValue != ':') 
 			{
 				throw new JException ();
 			}
 
-			obj [key] = ParseJson (chars, ref index);
+			obj [key] = ParseJsonValue (chars, ref index);
 
-			//TODO: parse more key-value pairs
+			token = GetNextValidToken (chars, ref index);
+			if (token.Type == TokenType.PUNCTUATION && token.CharValue == ',')
+				goto fieldTag;
+
+			if (token.Type == TokenType.PUNCTUATION && token.CharValue == '}') {
+				return obj;
+			}
+
+			throw new JException ();
 		}
 
 		private static JArray ParseArray(char[] chars, ref int index)
 		{
 
+		}
+
+		// jump over the ignore characters
+		private static Token GetNextValidToken(char[] chars, ref int index)
+		{
+			var token = GetNextToken (chars, ref index);
+			while (token.Type == TokenType.IGNORE) {
+				token = GetNextToken (chars, ref index);
+			}
+
+			return token;
 		}
 
 		private static Token GetNextToken(char[] chars, ref int index)
@@ -250,6 +274,7 @@ namespace org.lmatt
 						chars [index + 2] == 'u' &&
 						chars [index + 3] == 'e') 
 					{
+						index += 4;
 						return new Token { Type = TokenType.BOOLEAN, BoolValue = true };
 					}
 				}
@@ -263,11 +288,26 @@ namespace org.lmatt
 						chars [index + 3] == 's' &&
 						chars [index + 4] == 'e') 
 					{
+						index += 5;
 						return new Token { Type = TokenType.BOOLEAN, BoolValue = false };
 					}
 				}
 
-				if (index >= chars.Length) 
+				// find a null
+				if (chars [index] == 'n') {
+					if (
+						(index + 3 < chars.Length) &&
+						chars [index + 1] == 'u' &&
+						chars [index + 2] == 'l' &&
+						chars [index + 3] == 'l') 
+					{
+						index += 4;
+						return new Token { Type = TokenType.NULL};
+					}
+				}
+
+
+				if (index < chars.Length) 
 				{
 					return new Token{ Type = TokenType.UNEXPECTED };
 				}

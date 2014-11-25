@@ -8,6 +8,7 @@ namespace org.lmatt
 		BOOLEAN,
 		OBJECTNAME,
 		PUNCTUATION,
+		NULL,
 		IGNORE,
 		END,
 		UNEXPECTED
