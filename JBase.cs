@@ -106,6 +106,30 @@ namespace org.lmatt
 		private static JArray ParseArray(char[] chars, ref int index)
 		{
 
+			JArray array = new JArray ();
+
+			int savedIndex = index;
+			var token = GetNextValidToken (chars, ref index);
+			while (token.Type != TokenType.PUNCTUATION || token.CharValue != ']') {
+
+				if (token.Type == TokenType.UNEXPECTED || token.Type == TokenType.END) {
+					throw new JException ();
+				}
+
+				index = savedIndex;
+				array.Add(ParseJsonValue(chars, ref index));
+
+				savedIndex = index;
+				token = GetNextValidToken (chars, ref index);
+
+				if (token.Type == TokenType.PUNCTUATION && token.CharValue == ',') {
+					token = GetNextValidToken (chars, ref index);
+				}
+			}
+
+			if (token.Type == TokenType.PUNCTUATION && token.CharValue == ']') {
+				return array;
+			}
 		}
 
 		// jump over the ignore characters
