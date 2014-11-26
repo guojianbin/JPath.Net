@@ -23,7 +23,7 @@ namespace org.lmatt
 		{
 			var chars = Json.ToCharArray ();
 			int index = 0;
-			ParseJson (chars, index);
+			return ParseJson (chars, ref index);
 		}
 
 		private static JBase ParseJson(char[] chars, ref int index)
@@ -54,15 +54,19 @@ namespace org.lmatt
 
 			switch (token.Type) {
 			case TokenType.NUMBER:
+				throw new NotImplementedException ();
 				break;
 			case TokenType.BOOLEAN:
+				throw new NotImplementedException ();
 				break;
 			case TokenType.STRING:
+				throw new NotImplementedException ();
 				break;
 			case TokenType.NULL:
+				throw new NotImplementedException ();
 				break;
 			default:
-				return ParseJson (chars, index);
+				return ParseJson (chars, ref index);
 			}
 		}
 
@@ -130,6 +134,8 @@ namespace org.lmatt
 			if (token.Type == TokenType.PUNCTUATION && token.CharValue == ']') {
 				return array;
 			}
+
+			throw new JException ();
 		}
 
 		// jump over the ignore characters
@@ -214,7 +220,7 @@ namespace org.lmatt
 
 				double numberValue;
 				var numberString = new string (chars, startIndex, index - startIndex);
-				if (double.TryParse (numberString, out doubleValue)) 
+				if (double.TryParse (numberString, out numberValue)) 
 				{
 					return new Token { Type = TokenType.NUMBER, NumberValue = numberValue };
 				} else 

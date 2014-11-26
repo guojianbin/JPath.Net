@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections;
+using System.Collections.Generic;
 
 namespace org.lmatt
 {
-	public class JArray : IList, ICloneable
+	public class JArray : JBase, IList<JBase>, ICloneable
 	{
 		private JBase[] _contents = new JBase[8];
 		private int _count;
@@ -13,167 +13,81 @@ namespace org.lmatt
 			_count = 0;
 		}
 
-		//Below codes are from msdn: http://msdn.microsoft.com/en-us/library/system.collections.ilist%28v=vs.110%29.aspx
+		#region ICloneable implementation
 
-		// IList Members 
-		public int Add(JBase value)
+		public object Clone ()
 		{
-			if (_count < _contents.Length)
-			{
-				_contents[_count] = value;
-				_count++;
-
-				return (_count - 1);
-			}
-			else
-			{
-				return -1;
-			}
+			throw new NotImplementedException ();
 		}
 
-		public void Clear()
-		{
-			_count = 0;
-		}
+		#endregion
 
-		public bool Contains(JBase value)
+		#region IList implementation
+		public int IndexOf (JBase item)
 		{
-			bool inList = false;
-			for (int i = 0; i < Count; i++)
-			{
-				if (_contents[i] == value)
-				{
-					inList = true;
-					break;
-				}
+			throw new NotImplementedException ();
+		}
+		public void Insert (int index, JBase item)
+		{
+			throw new NotImplementedException ();
+		}
+		public void RemoveAt (int index)
+		{
+			throw new NotImplementedException ();
+		}
+		public JBase this [int index] {
+			get {
+				throw new NotImplementedException ();
 			}
-			return inList;
-		}
-
-		public int IndexOf(JBase value)
-		{
-			int itemIndex = -1;
-			for (int i = 0; i < Count; i++)
-			{
-				if (_contents[i] == value)
-				{
-					itemIndex = i;
-					break;
-				}
-			}
-			return itemIndex;
-		}
-
-		public void Insert(int index, JBase value)
-		{
-			if ((_count + 1 <= _contents.Length) && (index < Count) && (index >= 0))
-			{
-				_count++;
-
-				for (int i = Count - 1; i > index; i--)
-				{
-					_contents[i] = _contents[i - 1];
-				}
-				_contents[index] = value;
+			set {
+				throw new NotImplementedException ();
 			}
 		}
-
-		public bool IsFixedSize
+		#endregion
+		#region ICollection implementation
+		public void Add (JBase item)
 		{
-			get
-			{
-				return true;
+			throw new NotImplementedException ();
+		}
+		public void Clear ()
+		{
+			throw new NotImplementedException ();
+		}
+		public bool Contains (JBase item)
+		{
+			throw new NotImplementedException ();
+		}
+		public void CopyTo (JBase[] array, int arrayIndex)
+		{
+			throw new NotImplementedException ();
+		}
+		public bool Remove (JBase item)
+		{
+			throw new NotImplementedException ();
+		}
+		public int Count {
+			get {
+				throw new NotImplementedException ();
 			}
 		}
-
-		public bool IsReadOnly
-		{
-			get
-			{
-				return false;
+		public bool IsReadOnly {
+			get {
+				throw new NotImplementedException ();
 			}
 		}
-
-		public void Remove(JBase value)
+		#endregion
+		#region IEnumerable implementation
+		public IEnumerator<JBase> GetEnumerator ()
 		{
-			RemoveAt(IndexOf(value));
+			throw new NotImplementedException ();
 		}
-
-		public void RemoveAt(int index)
+		#endregion
+		#region IEnumerable implementation
+		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
 		{
-			if ((index >= 0) && (index < Count))
-			{
-				for (int i = index; i < Count - 1; i++)
-				{
-					_contents[i] = _contents[i + 1];
-				}
-				_count--;
-			}
+			throw new NotImplementedException ();
 		}
-
-		public object this[int index]
-		{
-			get
-			{
-				return _contents[index];
-			}
-			set
-			{
-				_contents[index] = value;
-			}
-		}
-
-		// ICollection Members 
-
-		public void CopyTo(Array array, int index)
-		{
-			int j = index;
-			for (int i = 0; i < Count; i++)
-			{
-				array.SetValue(_contents[i], j);
-				j++;
-			}
-		}
-
-		public int Count
-		{
-			get
-			{
-				return _count;
-			}
-		}
-
-		public bool IsSynchronized
-		{
-			get
-			{
-				return false;
-			}
-		}
-
-		// Return the current instance since the underlying store is not 
-		// publicly available. 
-		public object SyncRoot
-		{
-			get
-			{
-				return this;
-			}
-		}
-
-		// IEnumerable Members 
-
-		public IEnumerator GetEnumerator()
-		{
-			// Refer to the IEnumerator documentation for an example of 
-			// implementing an enumerator. 
-			throw new Exception("The method or operation is not implemented.");
-		}
-
-		public Object Clone()
-		{
-			throw new Exception("The method or operation is not implemented.");
-		}
+		#endregion
 	}
 }
 
