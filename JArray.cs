@@ -17,7 +17,12 @@ namespace org.lmatt
 
 		public object Clone ()
 		{
-			throw new NotImplementedException ();
+			JArray clone = new JArray ();
+			for (int i = 0; i < this._count; i++) {
+				clone.Add (this [i]);
+			}
+
+			return clone;
 		}
 
 		#endregion
@@ -25,7 +30,12 @@ namespace org.lmatt
 		#region IList implementation
 		public int IndexOf (JBase item)
 		{
-			throw new NotImplementedException ();
+			for (int i = 0; i < _count; i++) {
+				if (_contents [i] == item)
+					return i;
+			}
+
+			return -1;
 		}
 		public void Insert (int index, JBase item)
 		{
@@ -37,25 +47,38 @@ namespace org.lmatt
 		}
 		public JBase this [int index] {
 			get {
-				throw new NotImplementedException ();
+				return _contents [index];
 			}
 			set {
-				throw new NotImplementedException ();
+				_contents [index] = value;
 			}
 		}
 		#endregion
 		#region ICollection implementation
 		public void Add (JBase item)
 		{
-			throw new NotImplementedException ();
+			if (_count >= (_contents.Length - 1)) {
+				var newContent = new JBase[_contents.Length << 1];
+				for (int i = 0; i < _count; i++) {
+					newContent [i] = _contents [i];
+				}
+				_contents = newContent;
+			}
+
+			_contents [_count++] = item;
 		}
 		public void Clear ()
 		{
-			throw new NotImplementedException ();
+			_count = 0;
 		}
 		public bool Contains (JBase item)
 		{
-			throw new NotImplementedException ();
+			for (int i = 0; i < _count; i++) {
+				if (_contents [i] == item)
+					return true;
+			}
+
+			return false;
 		}
 		public void CopyTo (JBase[] array, int arrayIndex)
 		{
@@ -63,29 +86,43 @@ namespace org.lmatt
 		}
 		public bool Remove (JBase item)
 		{
-			throw new NotImplementedException ();
+			int fIndex = -1;
+			for (int i = 0; i < _count; i++) {
+				if (_contents [i] == item) {
+					fIndex = i;
+					break;
+				}
+			}
+			if (fIndex > -1) {
+				for (int i = fIndex + 1; i < _count; i++) {
+					_contents [i - 1] = _contents [i];
+				}
+				_count--;
+				return true;
+			}
+			return false;
 		}
 		public int Count {
 			get {
-				throw new NotImplementedException ();
+				return _count;
 			}
 		}
 		public bool IsReadOnly {
 			get {
-				throw new NotImplementedException ();
+				return false;
 			}
 		}
 		#endregion
 		#region IEnumerable implementation
 		public IEnumerator<JBase> GetEnumerator ()
 		{
-			throw new NotImplementedException ();
+			return ((IEnumerable<JBase>)_contents).GetEnumerator();
 		}
 		#endregion
 		#region IEnumerable implementation
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
 		{
-			throw new NotImplementedException ();
+			return _contents.GetEnumerator ();
 		}
 		#endregion
 	}
