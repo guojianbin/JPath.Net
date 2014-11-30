@@ -1,13 +1,13 @@
 ﻿<Properties GitUserInfo="UsingGIT">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="JArray.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="JBase.cs">
     <Files>
       <File FileName="JPath.cs" Line="1" Column="1" />
-      <File FileName="Unitest/Test.cs" Line="4" Column="4" />
-      <File FileName="JBase.cs" Line="49" Column="49" />
+      <File FileName="Unitest/Test.cs" Line="1" Column="1" />
+      <File FileName="JBase.cs" Line="4" Column="4" />
       <File FileName="Token.cs" Line="1" Column="1" />
       <File FileName="JException.cs" Line="1" Column="1" />
-      <File FileName="JObject.cs" Line="40" Column="40" />
+      <File FileName="JObject.cs" Line="1" Column="1" />
       <File FileName="JArray.cs" Line="36" Column="36" />
     </Files>
   </MonoDevelop.Ide.Workbench>

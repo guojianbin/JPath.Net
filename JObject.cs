@@ -1,50 +1,54 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace org.lmatt
 {
 	public class JObject : JBase, IDictionary<string, JBase>
 	{
+
+		IDictionary<string, JBase> _data = new Dictionary<string, JBase>();
+
 		#region IDictionary implementation
 
 		public void Add (string key, JBase value)
 		{
-			throw new NotImplementedException ();
+			_data.Add (key, value);
 		}
 
 		public bool ContainsKey (string key)
 		{
-			throw new NotImplementedException ();
+			return _data.ContainsKey (key);
 		}
 
 		public bool Remove (string key)
 		{
-			throw new NotImplementedException ();
+			return _data.Remove (key);
 		}
 
 		public bool TryGetValue (string key, out JBase value)
 		{
-			throw new NotImplementedException ();
+			return _data.TryGetValue (key, out value);
 		}
 
 		public JBase this [string index] {
 			get {
-				throw new NotImplementedException ();
+				return _data [index];
 			}
 			set {
-				throw new NotImplementedException ();
+				_data [index] = value;
 			}
 		}
 
 		public ICollection<string> Keys {
 			get {
-				throw new NotImplementedException ();
+				return _data.Keys;
 			}
 		}
 
 		public ICollection<JBase> Values {
 			get {
-				throw new NotImplementedException ();
+				return _data.Values;
 			}
 		}
 
@@ -54,38 +58,38 @@ namespace org.lmatt
 
 		public void Add (KeyValuePair<string, JBase> item)
 		{
-			throw new NotImplementedException ();
+			_data.Add (item);
 		}
 
 		public void Clear ()
 		{
-			throw new NotImplementedException ();
+			_data.Clear ();
 		}
 
 		public bool Contains (KeyValuePair<string, JBase> item)
 		{
-			throw new NotImplementedException ();
+			return _data.Contains (item);
 		}
 
 		public void CopyTo (KeyValuePair<string, JBase>[] array, int arrayIndex)
 		{
-			throw new NotImplementedException ();
+			_data.CopyTo (array, arrayIndex);
 		}
 
 		public bool Remove (KeyValuePair<string, JBase> item)
 		{
-			throw new NotImplementedException ();
+			return _data.Remove (item);
 		}
 
 		public int Count {
 			get {
-				throw new NotImplementedException ();
+				return _data.Count;
 			}
 		}
 
 		public bool IsReadOnly {
 			get {
-				throw new NotImplementedException ();
+				return _data.IsReadOnly;
 			}
 		}
 
@@ -95,7 +99,7 @@ namespace org.lmatt
 
 		public IEnumerator<KeyValuePair<string, JBase>> GetEnumerator ()
 		{
-			throw new NotImplementedException ();
+			return _data.GetEnumerator ();
 		}
 
 		#endregion
@@ -104,7 +108,7 @@ namespace org.lmatt
 
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
 		{
-			throw new NotImplementedException ();
+			return _data.GetEnumerator ();
 		}
 
 		#endregion

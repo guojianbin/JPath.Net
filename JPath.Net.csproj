@@ -38,6 +38,9 @@
     <Compile Include="JException.cs" />
     <Compile Include="JObject.cs" />
     <Compile Include="JArray.cs" />
+    <Compile Include="JString.cs" />
+    <Compile Include="JNumber.cs" />
+    <Compile Include="JBoolean.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

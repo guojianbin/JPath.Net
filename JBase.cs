@@ -42,7 +42,6 @@ namespace org.lmatt
 				default:
 					throw new JException ();
 				}
-				break;
 			default:
 				throw new JException ();
 			}
@@ -50,22 +49,20 @@ namespace org.lmatt
 
 		private static JBase ParseJsonValue(char[] chars, ref int index)
 		{
+			var savedIndex = index;
 			var token = GetNextValidToken (chars, ref index);
 
 			switch (token.Type) {
 			case TokenType.NUMBER:
-				throw new NotImplementedException ();
-				break;
+				return new JNumber{ Value = token.NumberValue };
 			case TokenType.BOOLEAN:
-				throw new NotImplementedException ();
-				break;
+				return new JBoolean{ Value = token.BoolValue };
 			case TokenType.STRING:
-				throw new NotImplementedException ();
-				break;
+				return new JString{ Value = token.StringValue };
 			case TokenType.NULL:
-				throw new NotImplementedException ();
-				break;
+				return null;
 			default:
+				index = savedIndex;
 				return ParseJson (chars, ref index);
 			}
 		}
@@ -127,6 +124,7 @@ namespace org.lmatt
 				token = GetNextValidToken (chars, ref index);
 
 				if (token.Type == TokenType.PUNCTUATION && token.CharValue == ',') {
+					savedIndex = index;
 					token = GetNextValidToken (chars, ref index);
 				}
 			}
@@ -198,12 +196,13 @@ namespace org.lmatt
 				index++;
 			}
 
-			if (index < chars.Length && (chars[index] >= '0' || chars[index] <= '9'))
+			if (index < chars.Length && (chars[index] >= '0' && chars[index] <= '9'))
 			{
+				startIndex = index;
 				while (index < chars.Length) 
 				{
 					if (
-						chars [index] >= '0' ||
+						chars [index] >= '0' &&
 						chars [index] <= '9' ||
 						chars [index] == '.' ||
 						chars [index] == 'e' ||
@@ -237,12 +236,10 @@ namespace org.lmatt
 
 			//TODO: support single quote string
 			// find string
-			if (chars [index] == '"') 
-			{
+			if (chars [index] == '"') {
 				StringBuilder builder = new StringBuilder ();
 				index++;
-				while (index < chars.Length) 
-				{
+				while (index < chars.Length) {
 					if (chars [index] == '\\') {
 						if (index + 1 >= chars.Length) {
 							return new Token { Type = TokenType.UNEXPECTED, CharValue = chars [index] };
@@ -284,64 +281,56 @@ namespace org.lmatt
 						}
 						index++;
 					} // end for escapse
-					else if (chars [index] == '"') 
-					{
+					else if (chars [index] == '"') {
 						index++;
 						return new Token{ Type = TokenType.STRING, StringValue = builder.ToString () };
-					} else 
-					{
+					} else {
 						builder.Append (chars [index]);
 					}
 					index++;
 				}//end while
-
-				// find a bool
-				if (chars [index] == 't') 
-				{
-					if (
-						(index + 3 < chars.Length) &&
-						chars [index + 1] == 'r' &&
-						chars [index + 2] == 'u' &&
-						chars [index + 3] == 'e') 
-					{
-						index += 4;
-						return new Token { Type = TokenType.BOOLEAN, BoolValue = true };
-					}
-				}
-
-				if (chars [index] == 'f') 
-				{
-					if (
-						(index + 4 < chars.Length) &&
-						chars [index + 1] == 'a' &&
-						chars [index + 2] == 'l' &&
-						chars [index + 3] == 's' &&
-						chars [index + 4] == 'e') 
-					{
-						index += 5;
-						return new Token { Type = TokenType.BOOLEAN, BoolValue = false };
-					}
-				}
-
-				// find a null
-				if (chars [index] == 'n') {
-					if (
-						(index + 3 < chars.Length) &&
-						chars [index + 1] == 'u' &&
-						chars [index + 2] == 'l' &&
-						chars [index + 3] == 'l') 
-					{
-						index += 4;
-						return new Token { Type = TokenType.NULL};
-					}
-				}
-
-
-				if (index < chars.Length) 
-				{
-					return new Token{ Type = TokenType.UNEXPECTED };
-				}
 			}// end for find string
+
+			// find a bool
+			if (chars [index] == 't') 
+			{
+				if (
+					(index + 3 < chars.Length) &&
+					chars [index + 1] == 'r' &&
+					chars [index + 2] == 'u' &&
+					chars [index + 3] == 'e') 
+				{
+					index += 4;
+					return new Token { Type = TokenType.BOOLEAN, BoolValue = true };
+				}
+			}
+
+			if (chars [index] == 'f') 
+			{
+				if (
+					(index + 4 < chars.Length) &&
+					chars [index + 1] == 'a' &&
+					chars [index + 2] == 'l' &&
+					chars [index + 3] == 's' &&
+					chars [index + 4] == 'e') 
+				{
+					index += 5;
+					return new Token { Type = TokenType.BOOLEAN, BoolValue = false };
+				}
+			}
+
+			// find a null
+			if (chars [index] == 'n') {
+				if (
+					(index + 3 < chars.Length) &&
+					chars [index + 1] == 'u' &&
+					chars [index + 2] == 'l' &&
+					chars [index + 3] == 'l') 
+				{
+					index += 4;
+					return new Token { Type = TokenType.NULL};
+				}
+			}
 
 			return new Token{ Type = TokenType.UNEXPECTED, CharValue = chars[index] };
 		}
