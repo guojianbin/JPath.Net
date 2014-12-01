@@ -2,6 +2,7 @@
 /// Json Base Class.
 /// </summary>
 using System.Text;
+using System.Collections.Generic;
  
 
 namespace org.lmatt
@@ -333,6 +334,16 @@ namespace org.lmatt
 			}
 
 			return new Token{ Type = TokenType.UNEXPECTED, CharValue = chars[index] };
+		}
+
+		public static JBase JPathSelect(string jPath)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public static IList<JBase> JPathSelects(string jPath)
+		{
+			throw new NotImplementedException ();
 		}
 	}
 }

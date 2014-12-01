@@ -116,6 +116,11 @@ namespace org.lmatt
 		public JObject ()
 		{
 		}
+
+		public static JObject Parse(string json)
+		{
+			return JBase.ParseJson (json) as JObject;
+		}
 	}
 }
 

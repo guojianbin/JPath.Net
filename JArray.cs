@@ -5,12 +5,15 @@ namespace org.lmatt
 {
 	public class JArray : JBase, IList<JBase>, ICloneable
 	{
-		private JBase[] _contents = new JBase[8];
-		private int _count;
+		private IList<JBase> _data = new List<JBase>();
 
 		public JArray()
 		{
-			_count = 0;
+		}
+
+		public static JArray Parse(string json)
+		{
+			return JBase.ParseJson (json) as JArray;
 		}
 
 		#region ICloneable implementation
@@ -18,7 +21,7 @@ namespace org.lmatt
 		public object Clone ()
 		{
 			JArray clone = new JArray ();
-			for (int i = 0; i < this._count; i++) {
+			for (int i = 0; i < _data.Count; i++) {
 				clone.Add (this [i]);
 			}
 
@@ -30,99 +33,67 @@ namespace org.lmatt
 		#region IList implementation
 		public int IndexOf (JBase item)
 		{
-			for (int i = 0; i < _count; i++) {
-				if (_contents [i] == item)
-					return i;
-			}
-
-			return -1;
+			return _data.IndexOf (item);
 		}
 		public void Insert (int index, JBase item)
 		{
-			throw new NotImplementedException ();
+			_data.Insert (index, item);
 		}
 		public void RemoveAt (int index)
 		{
-			throw new NotImplementedException ();
+			_data.RemoveAt (index);
 		}
 		public JBase this [int index] {
 			get {
-				return _contents [index];
+				return _data [index];
 			}
 			set {
-				_contents [index] = value;
+				_data [index] = value;
 			}
 		}
 		#endregion
 		#region ICollection implementation
 		public void Add (JBase item)
 		{
-			if (_count >= (_contents.Length - 1)) {
-				var newContent = new JBase[_contents.Length << 1];
-				for (int i = 0; i < _count; i++) {
-					newContent [i] = _contents [i];
-				}
-				_contents = newContent;
-			}
-
-			_contents [_count++] = item;
+			_data.Add (item);
 		}
 		public void Clear ()
 		{
-			_count = 0;
+			_data.Clear ();
 		}
 		public bool Contains (JBase item)
 		{
-			for (int i = 0; i < _count; i++) {
-				if (_contents [i] == item)
-					return true;
-			}
-
-			return false;
+			return _data.Contains (item);
 		}
 		public void CopyTo (JBase[] array, int arrayIndex)
 		{
-			throw new NotImplementedException ();
+			_data.CopyTo (array, arrayIndex);
 		}
 		public bool Remove (JBase item)
 		{
-			int fIndex = -1;
-			for (int i = 0; i < _count; i++) {
-				if (_contents [i] == item) {
-					fIndex = i;
-					break;
-				}
-			}
-			if (fIndex > -1) {
-				for (int i = fIndex + 1; i < _count; i++) {
-					_contents [i - 1] = _contents [i];
-				}
-				_count--;
-				return true;
-			}
-			return false;
+			return _data.Remove (item);
 		}
 		public int Count {
 			get {
-				return _count;
+				return _data.Count;
 			}
 		}
 		public bool IsReadOnly {
 			get {
-				return false;
+				return _data.IsReadOnly;
 			}
 		}
 		#endregion
 		#region IEnumerable implementation
 		public IEnumerator<JBase> GetEnumerator ()
 		{
-			return ((IEnumerable<JBase>)_contents).GetEnumerator();
+			return _data.GetEnumerator ();
 		}
 		#endregion
 		#region IEnumerable implementation
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
 		{
-			return _contents.GetEnumerator ();
+			return _data.GetEnumerator ();
 		}
 		#endregion
 	}
