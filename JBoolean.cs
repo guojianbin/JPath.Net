@@ -9,6 +9,11 @@ namespace org.lmatt
 		public JBoolean ()
 		{
 		}
+
+		public override string ToString ()
+		{
+			return string.Format ("[JBoolean: Value={0}]", Value);
+		}
 	}
 }
 

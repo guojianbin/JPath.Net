@@ -9,6 +9,11 @@ namespace org.lmatt
 		public JString ()
 		{
 		}
+
+		public override string ToString ()
+		{
+			return string.Format ("[JString: Value={0}]", Value);
+		}
 	}
 }
 

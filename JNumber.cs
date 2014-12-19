@@ -10,6 +10,11 @@ namespace org.lmatt
 		public JNumber ()
 		{
 		}
+
+		public override string ToString ()
+		{
+			return string.Format ("[JNumber: Value={0}]", Value);
+		}
 	}
 }
 
