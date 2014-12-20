@@ -58,6 +58,19 @@ namespace Unitest
 			Assert.AreEqual (1, eveluateResults.Count);
 			Assert.IsInstanceOf<JNumber> (eveluateResults [0]);
 		}
+
+		[Test()]
+		public void TestJPathSelect()
+		{
+			var jsonObj = org.lmatt.JBase.ParseJson ("{\"key1\" : [], \"key2\": {}, \"key3\": [1, 2, 3], \"key4\": {\"key5\": \"value1\"}, \"key5\": true, \"key6\": 1}");
+			var eveluateResults = jsonObj.JPathSelects ("//key5|//key6");
+
+			Assert.AreEqual (3, eveluateResults.Count);
+
+			var result = jsonObj.JPathSelect ("//key5");
+			Assert.IsInstanceOf<JBoolean> (result);
+			Assert.AreEqual (true, ((JBoolean)result).Value);
+		}
 	}
 }
 

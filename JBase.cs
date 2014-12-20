@@ -336,15 +336,21 @@ namespace org.lmatt
 			return new Token{ Type = TokenType.UNEXPECTED, CharValue = chars[index] };
 		}
 
-		public static JBase JPathSelect(string jPath)
+		public static JBase JPathSelect(JBase baseObj, string jPath)
 		{
-			throw new NotImplementedException ();
+			var items = JPathSelects (baseObj, jPath);
+			if (items.Count > 0)
+				return items[0];
+			return null;
 		}
 
-		public static IList<JBase> JPathSelects(string jPath)
+		public static IList<JBase> JPathSelects(JBase baseObj, string jPath)
 		{
-			throw new NotImplementedException ();
+			JPath path = new JPath (jPath);
+			return path.Evaluate (baseObj);
 		}
+
+
 	}
 }
 

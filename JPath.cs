@@ -27,11 +27,16 @@ namespace org.lmatt
 		public IList<JBase> Evaluate(JBase obj)
 		{
 			var results = new List<JBase> ();
+			var allResult = new List<JBase> ();
 			foreach (var jPath in jPaths) {
-				//TODO: unique the result
-				results.AddRange(Evaluate (jPath.ToCharArray (), 0, obj));
+				allResult.AddRange(Evaluate (jPath.ToCharArray (), 0, obj));
 			}
-
+			var checkSet = new HashSet<JBase> ();
+			foreach (var item in allResult) {
+				if (!checkSet.Contains (item)) {
+					results.Add (item);
+				}
+			}
 			return results;
 		}
 

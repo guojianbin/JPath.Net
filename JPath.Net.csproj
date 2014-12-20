@@ -41,6 +41,7 @@
     <Compile Include="JString.cs" />
     <Compile Include="JNumber.cs" />
     <Compile Include="JBoolean.cs" />
+    <Compile Include="JPathExt.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
